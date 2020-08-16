@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Empty
 {
@@ -30,6 +32,24 @@ namespace Empty
                 File.Delete(_fileName);
             }
             editor.Text = string.Empty;
+        }
+    }
+    [ContentProperty(nameof(Source))]
+    public class ImageResourceExtension : IMarkupExtension
+    {
+        public string Source { get; set; }
+
+        public object ProvideValue(IServiceProvider serviceProvider)
+        {
+            if (Source == null)
+            {
+                return null;
+            }
+
+            // Do your translation lookup here, using whatever method you require
+            var imageSource = ImageSource.FromResource(Source, typeof(ImageResourceExtension).GetTypeInfo().Assembly);
+
+            return imageSource;
         }
     }
 }
